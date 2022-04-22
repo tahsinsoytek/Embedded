@@ -1,0 +1,165 @@
+CCS PCM C Compiler, Version 5.015, 5967               25-Nis-21 15:30
+
+               Filename:   D:\Masaüstü\Embedded Systems(Gömülü Sistemler)\Projeler\Proje 3\main.lst
+
+               ROM used:   94 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   6 (2%) at main() level
+                           7 (2%) worst case
+               Stack used: 1 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   018
+0003:  NOP
+.................... #include <main.h> 
+.................... #include <16F877.h> 
+.................... //////////// Standard Header file for the PIC16F877 device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877 
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                 	//No Watch Dog Timer 
+.................... #FUSES NOBROWNOUT            	//No brownout reset 
+.................... #FUSES NOLVP                 	//No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O 
+....................  
+.................... #use delay(crystal=20000000) 
+0004:  MOVLW  22
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   017
+000A:  MOVLW  06
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  7B
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  DECFSZ 00,F
+0016:  GOTO   00A
+0017:  RETURN
+....................  
+....................  
+....................  
+.................... void main() 
+0018:  MOVF   03,W
+0019:  ANDLW  1F
+001A:  MOVWF  03
+001B:  BSF    03.5
+001C:  BSF    1F.0
+001D:  BSF    1F.1
+001E:  BSF    1F.2
+001F:  BCF    1F.3
+0020:  BCF    03.7
+0021:  BCF    03.5
+0022:  CLRF   21
+.................... { 
+....................    int i=0; 
+....................    set_tris_a(0x03); 
+0023:  MOVLW  03
+0024:  BSF    03.5
+0025:  MOVWF  05
+....................    set_tris_b(0x00); 
+0026:  MOVLW  00
+0027:  MOVWF  06
+....................    output_b(i); 
+0028:  CLRF   06
+0029:  BCF    03.5
+002A:  MOVF   21,W
+002B:  MOVWF  06
+....................  
+....................    while(TRUE) 
+....................    { 
+....................       if(input(pin_a0)) 
+002C:  BSF    03.5
+002D:  BSF    05.0
+002E:  BCF    03.5
+002F:  BTFSS  05.0
+0030:  GOTO   043
+....................       { 
+....................          i++; 
+0031:  INCF   21,F
+....................          if(i==10) 
+0032:  MOVF   21,W
+0033:  SUBLW  0A
+0034:  BTFSC  03.2
+....................          i=0; 
+0035:  CLRF   21
+....................          output_b(i); 
+0036:  BSF    03.5
+0037:  CLRF   06
+0038:  BCF    03.5
+0039:  MOVF   21,W
+003A:  MOVWF  06
+....................          delay_ms(200); 
+003B:  MOVLW  C8
+003C:  MOVWF  22
+003D:  CALL   004
+....................          while(input(pin_a0)); 
+003E:  BSF    03.5
+003F:  BSF    05.0
+0040:  BCF    03.5
+0041:  BTFSC  05.0
+0042:  GOTO   03E
+....................       } 
+....................       if(input(pin_a1)) 
+0043:  BSF    03.5
+0044:  BSF    05.1
+0045:  BCF    03.5
+0046:  BTFSS  05.1
+0047:  GOTO   05C
+....................       { 
+....................          i--; 
+0048:  DECF   21,F
+....................          if(i==-1) 
+0049:  MOVF   21,W
+004A:  SUBLW  FF
+004B:  BTFSS  03.2
+004C:  GOTO   04F
+....................          i=9; 
+004D:  MOVLW  09
+004E:  MOVWF  21
+....................          output_b(i); 
+004F:  BSF    03.5
+0050:  CLRF   06
+0051:  BCF    03.5
+0052:  MOVF   21,W
+0053:  MOVWF  06
+....................          delay_ms(200); 
+0054:  MOVLW  C8
+0055:  MOVWF  22
+0056:  CALL   004
+....................          while(input(pin_a1)); 
+0057:  BSF    03.5
+0058:  BSF    05.1
+0059:  BCF    03.5
+005A:  BTFSC  05.1
+005B:  GOTO   057
+....................       } 
+005C:  GOTO   02C
+....................    } 
+....................  
+.................... } 
+005D:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F32   HS NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

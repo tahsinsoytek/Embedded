@@ -1,0 +1,226 @@
+CCS PCM C Compiler, Version 5.015, 5967               02-Aðu-21 17:02
+
+               Filename:   D:\Masaüstü\Embedded Systems(Gömülü Sistemler)\Projeler\Proje 8(Second Counter)\main.lst
+
+               ROM used:   149 words (2%)
+                           Largest free fragment is 2048
+               RAM used:   18 (5%) at main() level
+                           21 (6%) worst case
+               Stack used: 2 locations (0 in main + 2 for interrupts)
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   074
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  BTFSS  0B.5
+0018:  GOTO   01B
+0019:  BTFSC  0B.2
+001A:  GOTO   02C
+001B:  MOVF   22,W
+001C:  MOVWF  04
+001D:  MOVF   23,W
+001E:  MOVWF  77
+001F:  MOVF   24,W
+0020:  MOVWF  78
+0021:  MOVF   25,W
+0022:  MOVWF  79
+0023:  MOVF   26,W
+0024:  MOVWF  7A
+0025:  MOVF   20,W
+0026:  MOVWF  0A
+0027:  SWAPF  21,W
+0028:  MOVWF  03
+0029:  SWAPF  7F,F
+002A:  SWAPF  7F,W
+002B:  RETFIE
+002C:  BCF    0A.3
+002D:  BCF    0A.4
+002E:  GOTO   044
+.................... #include <main.h> 
+.................... #include <16F877A.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+002F:  MOVF   2E,W
+0030:  CLRF   78
+0031:  SUBWF  2D,W
+0032:  BTFSC  03.0
+0033:  GOTO   037
+0034:  MOVF   2D,W
+0035:  MOVWF  77
+0036:  GOTO   043
+0037:  CLRF   77
+0038:  MOVLW  08
+0039:  MOVWF  2F
+003A:  RLF    2D,F
+003B:  RLF    77,F
+003C:  MOVF   2E,W
+003D:  SUBWF  77,W
+003E:  BTFSC  03.0
+003F:  MOVWF  77
+0040:  RLF    78,F
+0041:  DECFSZ 2F,F
+0042:  GOTO   03A
+0043:  RETURN
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                 	//No Watch Dog Timer 
+.................... #FUSES NOBROWNOUT            	//No brownout reset 
+.................... #FUSES NOLVP                 	//No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O 
+....................  
+.................... #use delay(crystal=20000000) 
+....................  
+....................  
+....................  
+.................... int16 counter_period; 
+.................... int sec,digit1,digit10; 
+....................  
+.................... #INT_RTCC 
+.................... void  RTCC_isr(void)  
+.................... { 
+....................    set_timer0(6); 
+0044:  MOVLW  06
+0045:  MOVWF  01
+....................    counter_period++; 
+0046:  INCF   27,F
+0047:  BTFSC  03.2
+0048:  INCF   28,F
+....................    if(counter_period==2500) 
+0049:  MOVF   27,W
+004A:  SUBLW  C4
+004B:  BTFSS  03.2
+004C:  GOTO   070
+004D:  MOVF   28,W
+004E:  SUBLW  09
+004F:  BTFSS  03.2
+0050:  GOTO   070
+....................    { 
+....................       sec++; 
+0051:  INCF   29,F
+....................       digit1=sec%10; 
+0052:  MOVF   29,W
+0053:  MOVWF  2D
+0054:  MOVLW  0A
+0055:  MOVWF  2E
+0056:  CALL   02F
+0057:  MOVF   77,W
+0058:  MOVWF  2A
+....................       digit10=sec/10; 
+0059:  MOVF   29,W
+005A:  MOVWF  2D
+005B:  MOVLW  0A
+005C:  MOVWF  2E
+005D:  CALL   02F
+005E:  MOVF   78,W
+005F:  MOVWF  2B
+....................       output_c(digit10<<4 | digit1); 
+0060:  SWAPF  2B,W
+0061:  MOVWF  77
+0062:  MOVLW  F0
+0063:  ANDWF  77,F
+0064:  MOVF   77,W
+0065:  IORWF  2A,W
+0066:  MOVWF  2D
+0067:  MOVLW  00
+0068:  MOVWF  2C
+0069:  BSF    03.5
+006A:  CLRF   07
+006B:  BCF    03.5
+006C:  MOVF   2D,W
+006D:  MOVWF  07
+....................       counter_period=0; 
+006E:  CLRF   28
+006F:  CLRF   27
+....................    } 
+0070:  BCF    0B.2
+0071:  BCF    0A.3
+0072:  BCF    0A.4
+0073:  GOTO   01B
+.................... } 
+....................  
+.................... void main() 
+0074:  MOVF   03,W
+0075:  ANDLW  1F
+0076:  MOVWF  03
+0077:  MOVLW  FF
+0078:  MOVWF  2C
+0079:  BSF    03.5
+007A:  BSF    1F.0
+007B:  BSF    1F.1
+007C:  BSF    1F.2
+007D:  BCF    1F.3
+007E:  MOVLW  07
+007F:  MOVWF  1C
+0080:  BCF    03.7
+.................... { 
+....................    setup_timer_0(RTCC_INTERNAL|RTCC_DIV_8|RTCC_8_bit);      //409 us overflow 
+0081:  MOVF   01,W
+0082:  ANDLW  C0
+0083:  IORLW  02
+0084:  MOVWF  01
+....................     
+....................    set_tris_c(0x00); 
+0085:  MOVLW  00
+0086:  MOVWF  07
+0087:  BCF    03.5
+0088:  MOVWF  2C
+....................    output_c(0); 
+0089:  MOVWF  2C
+008A:  BSF    03.5
+008B:  CLRF   07
+008C:  BCF    03.5
+008D:  CLRF   07
+....................     
+....................    enable_interrupts(INT_RTCC); 
+008E:  BSF    0B.5
+....................    enable_interrupts(GLOBAL); 
+008F:  MOVLW  C0
+0090:  IORWF  0B,F
+....................     
+....................    set_timer0(6); 
+0091:  MOVLW  06
+0092:  MOVWF  01
+....................     
+....................    while(TRUE) 
+....................    { 
+0093:  GOTO   093
+....................       //TODO: User Code 
+....................    } 
+....................  
+.................... } 
+0094:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F32   HS NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

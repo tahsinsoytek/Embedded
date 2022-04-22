@@ -1,0 +1,7 @@
+ÀÄmain
+   ÀÄMAIN  0/103  Ram=12
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄ@GET_TICKS_1  0/40  Ram=1
+      ÃÄ@GET_TICKS_1  0/40  Ram=1
+      ÃÄGetTickDifference  0/24  Ram=8
+      ÀÄtimerint  0/8  Ram=0
